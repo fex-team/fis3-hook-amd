@@ -69,7 +69,7 @@ fis.hook('amd', {
 
   * 当 `require('foo')` 的时候等价于 `require('/modules/foo/index.js')`.
   * 当 `require('foo/a.js')` 的时候，等价于 `require('/modules/foo/a.js')`.
-* `shim` 可以达到不改目标文件，指定其依赖和暴露内容的效果。
+* `shim` 可以达到不改目标文件，指定其依赖和暴露内容的效果。**注意只对不满足amd的js有效**
   
   ```js
   fis.hook('amd', {
