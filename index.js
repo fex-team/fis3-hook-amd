@@ -35,8 +35,11 @@ var entry = module.exports = function(fis, opts) {
   fis.on('lookup:file', lookup);
   fis.on('standard:js', function(info) {
     var file = info.file;
+    var shimed = opts.shim && opts.shim[file.subpath];
 
-    if (file.isMod) {
+    if (file.isMod || shimed) {
+      // 用户主动配置了 shim 那么说明目标文件一定是模块化 js
+      shimed && (file.isMod = true);
       amd(info, opts);
     } else {
       
@@ -48,6 +51,24 @@ var entry = module.exports = function(fis, opts) {
         commonJs(info, opts);
       }
     }
+  });
+
+  // 支持 data-main 的用法。
+  var rScript = /<!--([\s\S]*?)(?:-->|$)|(<script[^>]*>[\s\S]*?<\/script>)/ig;
+  var rDataMain = /\bdata-main=('|")(.*?)\1/;
+  var lang = fis.compile.lang;
+
+  // 解析 data-main
+  fis.on('standard:html', function(info) {
+    info.content = info.content.replace(rScript, function(all, comment, script) {
+      if (!comment && script) {
+        all = all.replace(rDataMain, function(_, quote, value) {
+          return lang.info.wrap(lang.jsRequire.wrap(quote + value + quote));
+        });
+      }
+
+      return all;
+    });
   });
 };
 

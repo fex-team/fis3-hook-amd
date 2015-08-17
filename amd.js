@@ -110,7 +110,7 @@ function autowrap(info, conf) {
   var content = info.content;
   var shim = shims[file.subpath];
 
-  if (!file.isMod || amd.hasDefine(content)) {
+  if (!file.isMod || file.isPartial || amd.hasDefine(content)) {
     return;
   }
 
