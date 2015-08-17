@@ -78,9 +78,8 @@ entry.defaultOptions = {
   // 影响的结果是，依赖会提前在页面里面引入进来，而不是运行时去加载。
   globalAsyncAsSync: false,
 
-  // 是否前置依赖，如果是 mod.js 千万别配置成 true
   // 给那种自己实现 loader 的用户使用的。
-  forwardDeclaration: false,
+  forwardDeclaration: true,
 
   // 当前置依赖启动的时候才有效，用来控制是否把内建的 `require`, `exports`, `module` 从第二个参数中去掉。
   skipBuiltinModules: false,
