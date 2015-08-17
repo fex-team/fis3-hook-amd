@@ -15,6 +15,25 @@ fis.match('/modules/**.js', {
 
 只有标记是模块化的 js 才会去解析。
 
+## 说明
+
+fis 的 amd 方案，是把对依赖的分析过程从运行期改成了编译期，所以请尽量不要设置 `require.config({options...})`, 因为一旦设置了 `baseUrl` 和 `paths` 或者 `packages` 什么的，会让 `fis` 静态编译时分析变得很困难，甚至分析不到。
+
+但是，你可以给在编译期做同样的配置。
+
+// in fis-conf.js
+
+```
+fis.hook('amd'{
+  baseUrl: './modules',
+  paths: {
+    $: 'jquery/jquery-1.11.2.js'
+  }
+})
+```
+
+具体请查看[#配置项](配置项说明)。
+
 ## 安装
 
 全局安装或者本地安装都可以。
