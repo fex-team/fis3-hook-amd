@@ -21,7 +21,7 @@ var amd = module.exports = function(info, conf) {
 };
 
 // 判断是否是 amd
-amd.test = function(info) {
+/*amd.test = function(info) {
   var file = info.file;
   var content = info.content;
   var isAMD = false;
@@ -54,7 +54,7 @@ amd.test = function(info) {
   }
 
   return !!isAMD;
-};
+};*/
 
 amd.hasDefine = function(content) {
   var matched = false;
@@ -67,7 +67,7 @@ amd.hasDefine = function(content) {
   return matched;
 };
 
-amd.hasExports = function(content) {
+/*amd.hasExports = function(content) {
   var matched = false;
 
   rModule.lastIndex = 0; // reset RegExp
@@ -76,7 +76,7 @@ amd.hasExports = function(content) {
   }
 
   return matched;
-};
+};*/
 
 var backups = null;
 amd.backUpFISLang = function(content) {
