@@ -27,9 +27,9 @@ fis.hook('amd', {
 });
 ```
 
-## 重要说明
+## 说明
 
-请配合 require.js 或者 esl.js 或者其他满足 amd 规范的前端加载器一起使用。
+请配合 `require.js`、`esl.js` 或者其他满足 amd 规范的前端加载器一起使用。
 
 注意：需要对目标文件设置 `isMod` 属性，说明这些文件是模块化代码。
 
@@ -42,7 +42,9 @@ fis.match('/modules/**.js', {
 
 只有标记是模块化的 js 才会去解析。
 
-fis 的 amd 方案，是把对依赖的分析过程从运行期改成了编译期，所以请尽量不要设置 `require.config({options...})`, 因为一旦设置了 `baseUrl` 和 `paths` 或者 `packages` 什么的，会让 `fis` 静态编译时分析变得很困难，甚至分析不到。
+**另外**
+
+fis 的 amd 方案，是把对依赖的分析过程从运行期改成了编译期，所以请尽量不要设置 `require.config({options...})`, 因为一旦设置了 `baseUrl` 、 `paths` 或者 `packages` 什么的，会让 `fis` 静态编译时分析变得很困难，甚至分析不到。
 
 但是，你可以在编译期做同样的配置。
 
@@ -62,6 +64,23 @@ fis.hook('amd'{
 ## 配置项
 
 * `globalAsyncAsSync` 是否将全局下面的异步用法，当同步处理。作用是，本来要运行时加载的，现在变成页面里面直接引用了。
+
+  此开关为全局选项，如果只想控制部分 `require` 的用法，可以通过 js 注释来控制。
+  
+  当全局异步用法当同步用法关闭时，只有加了 `fis sync` 注释的异步用法才会当同步处理。
+  
+  ```js
+  // fis sync
+  require(['./module/a'])
+  ```
+  
+  当全局异步用法当同步用法开启时，只有加了 `fis async` 注释的异步用法才保留异步作用。
+  
+  ```js
+   // fis async
+  require(['./module/a'])
+  ```
+   
 * `baseUrl` 默认为 `.` 即项目根目录。用来配置模块查找根目录。
 * `paths` 用来设置别名，路径基于 `baseUrl` 设置。
   
@@ -100,6 +119,23 @@ fis.hook('amd'{
       }
   });
   ```
+  
+  * `key` 为目标文件
+  * `value`
+    * `deps` [可选] 依赖的 `module` 列表。
+    * `exports` [可选] 暴露的对象名称。
+    * `init` [可选] 暴露的可以通过自定的方法来控制。
+    
+      ```js
+      fis.hook('amd', {
+          shim: {
+              'comp/2-0/2-0.js': {
+                  deps: ['jquery'],
+                  init: 'function($) {return $.extend({a: 1}, {b: 2})}'
+              }
+          }
+      });
+      ```
 * `forwardDeclaration` 默认为 `true`, 用来设置是否开启依赖前置，根据前端加载器来定。
 * `skipBuiltinModules` 默认为 `false`, 只有在 `forwardDeclaration` 启动的时候才有效，用来设置前置依赖列表中是否跳过内置模块如： `require`, `module`, `exports`。
 * `extList` 默认为 `['.js', '.coffee', '.jsx', '.es6']`，当引用模块时没有指定后缀，该插件会尝试这些后缀。
