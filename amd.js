@@ -125,7 +125,13 @@ function autowrap(info, conf) {
   }
 
   if (shim && shim.init) {
-    affix = tab + 'modules.exports = (' + shim.init + ')(' + (function() {
+    var init = shim.init;
+
+    if (typeof init === 'function') {
+      init = Object.toString.call(shim.init);
+    }
+
+    affix = tab + 'module.exports = (' + shim.init + ')(' + (function() {
       var deps = [];
 
       if (shim.deps) {
@@ -135,7 +141,15 @@ function autowrap(info, conf) {
       }
 
       return deps.join(', ');
-    })() + ');\n' + affix;
+    })() + ');\n' + (function() {
+      var str = '';
+
+      if (shim.exports) {
+        str  = 'module.exports = typeof module.exports === \'undefined\' ? ' + shim.exports + ' : module.exports;\n';
+      }
+
+      return str;
+    })() + affix;
   } else if (shim && shim.exports) {
     affix = '\n' + tab + 'module.exports = ' + shim.exports + ';\n' + affix;
   }
