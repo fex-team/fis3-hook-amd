@@ -649,6 +649,7 @@ function traverse(ast, scopes, gs, enter, leave) {
         comments.forEach(function(comment) {
           if (/fis\s+async/i.exec(comment.value)) {
             info.markAsync = true;
+            info.markSync = false;
           } else if (/fis\s+sync/i.exec(comment.value)) {
             info.markSync = true;
           }
@@ -803,24 +804,4 @@ function bulkReplace(content, arr) {
     });
 
   return content;
-}
-
-function findPkgByFolder(folder, list) {
-  var ret = null;
-
-  if (list && list.length) {
-    list.every(function(item) {
-      if (item.folder === folder) {
-        ret = item;
-        return false;
-      }
-    });
-  }
-
-  return ret;
-}
-
-function isFISID(filepath) {
-  var nsConnector = fis.config.env().get('namespaceConnector', ':');
-  return !!~filepath.indexOf(nsConnector);
 }
