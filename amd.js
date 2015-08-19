@@ -382,6 +382,7 @@ function parse(file, content, conf) {
       if (node.asyncRequires && node.asyncRequires.length) {
         node.asyncRequires.forEach(function(req) {
           req.markAsync = true;
+          req.markSync = false;
           asyncRequires.push(req);
         });
       }
@@ -649,7 +650,6 @@ function traverse(ast, scopes, gs, enter, leave) {
         comments.forEach(function(comment) {
           if (/fis\s+async/i.exec(comment.value)) {
             info.markAsync = true;
-            info.markSync = false;
           } else if (/fis\s+sync/i.exec(comment.value)) {
             info.markSync = true;
           }
