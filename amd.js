@@ -10,14 +10,9 @@ var _ = fis.util;
 var amd = module.exports = function(info, conf) {
   var file = info.file;
 
-  try {
-    autowrap(info, conf);
-    info.content = parse(file, info.content, conf);
-    info.content = amd.restoreFISLang(info.content);
-  } catch (e) {
-    fis.log.warn('Got Error: %s while parse [%s].', e.message, file.subpath);
-    fis.log.debug(e.stack);
-  }
+  autowrap(info, conf);
+  info.content = parse(file, info.content, conf);
+  info.content = amd.restoreFISLang(info.content);
 };
 
 // 判断是否是 amd

@@ -40,7 +40,12 @@ var entry = module.exports = function(fis, opts) {
     if (file.isMod || shimed) {
       // 用户主动配置了 shim 那么说明目标文件一定是模块化 js
       shimed && (file.isMod = true);
-      amd(info, opts);
+      try {
+        amd(info, opts);
+      } catch (e) {
+        fis.log.warn('Got Error: %s while parse [%s].', e.message, file.subpath);
+        fis.log.debug(e.stack);
+      }
     } else {
       
       // 先尝试 amd 解析，失败则走 commonJs
