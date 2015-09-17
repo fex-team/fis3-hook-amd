@@ -160,7 +160,7 @@ function autowrap(info, conf) {
 
 function parse(file, content, conf) {
   var ret = file._amdAnalyzed || analyze(content);
-  var forgetDefine = file.isMod === false;
+  var forgetDefine = file.isMod === false || file.isPartial;
 
   delete file._amdAnalyzed;
 
