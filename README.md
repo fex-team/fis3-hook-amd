@@ -42,6 +42,19 @@ fis.match('/modules/**.js', {
 
 只有标记是模块化的 js 才会去解析。
 
+## 自定义模块ID
+
+插件默认使用资源的绝对路径作为模块ID，如果希望更改模块ID，需要对目标文件设置 `moduleId` 属性
+
+```js
+fis.match('/modules/(**).js', {
+  isMod: true,
+  moduleId: '$1'
+})
+``` 
+
+通过上述配置，我们可以将 `/modules/A.js` 的模块ID由 `modules/A` 改变为 `A`
+
 **另外**
 
 fis 的 amd 方案，是把对依赖的分析过程从运行期改成了编译期，所以请尽量不要设置 `require.config({options...})`, 因为一旦设置了 `baseUrl` 、 `paths` 或者 `packages` 什么的，会让 `fis` 静态编译时分析变得很困难，甚至分析不到。
