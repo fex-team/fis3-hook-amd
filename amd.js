@@ -216,7 +216,7 @@ function parse(file, content, conf) {
       });
 
       // deps 是指 define 的第二个参数中指定的依赖列表。
-      if (module.deps && module.deps.length) {
+      if (module.deps && module.deps.length && !conf.skipFactoryArgsReplace) {
 
         // 添加依赖。
         module.deps.forEach(function(elem) {
