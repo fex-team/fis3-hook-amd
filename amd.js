@@ -245,6 +245,11 @@ function parse(file, content, conf) {
           argname = argsRaw.shift();
           argname && args.push(argname);
         });
+
+        while (argsRaw.length) {
+          argname = argsRaw.shift();
+          argname && args.push(argname);
+        }
       }
       //  没有指定的话，原来 factory 里面参数放回去。
       else {
