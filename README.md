@@ -153,3 +153,12 @@ fis.hook('amd'{
 * `skipBuiltinModules` 默认为 `false`, 只有在 `forwardDeclaration` 启动的时候才有效，用来设置前置依赖列表中是否跳过内置模块如： `require`, `module`, `exports`。
 * `extList` 默认为 `['.js', '.coffee', '.jsx', '.es6']`，当引用模块时没有指定后缀，该插件会尝试这些后缀。
 * `tab` 默认为 `2`, 用来设置包裹时，内容缩进的空格数。
+* `ignoreDependencies` 默认为空，当分析到某个文件的时候，此插件会把当前文件标记依赖目标文件。如果你希望部分文件不这么做，那么请设置此插件。
+
+  ```js
+  fis.hook('amd', {
+      ignoreDependencies: [
+        'angular2/angular2'
+      ]
+  });
+  ```

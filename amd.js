@@ -166,6 +166,20 @@ function autowrap(info, conf) {
 function parse(file, content, conf) {
   var ret = file._amdAnalyzed || analyze(content);
   var forgetDefine = file.isMod === false || file.isPartial;
+  var ignoreDependencies = opts.ignoreDependencies || [];
+  var isIgnored = function(str) {
+    var found = false;
+
+    ignoreDependencies.every(function(item) {
+      if (item && item.exec && item.exec(str)) {
+        found = true;
+        return false;
+      }
+      return true;
+    });
+
+    return found;
+  };
 
   delete file._amdAnalyzed;
 
@@ -227,7 +241,7 @@ function parse(file, content, conf) {
         module.deps.forEach(function(elem) {
 
           // 不需要查找依赖，如果是 require、module、或者 exports.
-          if (~'require,module,exports'.indexOf(elem.value)) {
+          if (~'require,module,exports'.indexOf(elem.value) || isIgnored('/' + elem.value)) {
             deps.push(elem.raw);
             args.push(argsRaw.shift());
             return;
@@ -269,6 +283,11 @@ function parse(file, content, conf) {
 
           var elem = item.node.arguments[0];
           var v = elem.value;
+
+          if (isIgnored('/' + v)) {
+            return;
+          }
+
           var info = fis.util.stringQuote(elem.raw);
           v = info.rest.trim();
           var parts = v.split('!');
@@ -418,6 +437,10 @@ function parse(file, content, conf) {
     var async = conf.globalAsyncAsSync ? req.markAsync : !req.markSync;
 
     (req.deps || []).forEach(function(elem) {
+      if (isIgnored('/' + elem.value)) {
+        return;
+      }
+
       var v = elem.raw;
       var info = fis.util.stringQuote(v);
       v = info.rest.trim();

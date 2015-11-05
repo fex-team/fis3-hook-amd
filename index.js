@@ -32,6 +32,16 @@ var entry = module.exports = function(fis, opts) {
     opts.shim = normalized;
   })();
 
+  var ignoreDependencies = opts.ignoreDependencies || [];
+  if (typeof ignoreDependencies === 'string') {
+    ignoreDependencies = ignoreDependencies.split(/\s*,\s*/);
+  } else if (!Array.isArray(ignoreDependencies)) {
+    ignoreDependencies = [ignoreDependencies];
+  }
+  opts.ignoreDependencies = ignoreDependencies.map(function(item) {
+    return typeof item === 'string' ? fis.util.glob(item) : item;
+  });
+
   fis.on('lookup:file', lookup);
   fis.on('standard:js', function(info) {
     var file = info.file;
