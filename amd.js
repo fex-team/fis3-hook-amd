@@ -10,11 +10,12 @@ var _ = fis.util;
 var amd = module.exports = function(info, conf) {
   var file = info.file;
 
-  if (!file.isMod && file.skipDepsAnalysis) {
+  autowrap(info, conf);
+
+  if (file.skipDepsAnalysis) {
     return;
   }
-
-  autowrap(info, conf);
+  
   info.content = parse(file, info.content, conf);
   info.content = amd.restoreFISLang(info.content);
 };
@@ -109,11 +110,11 @@ function autowrap(info, conf) {
   var content = info.content;
   var shim = shims[file.subpath];
 
-  if (!file.isMod || !file.isJsLike || file.isPartial || amd.hasDefine(content)) {
+  if (!file.isMod || fis.wrap === false || !file.isJsLike || file.isPartial || amd.hasDefine(content)) {
     return;
   }
 
-  var prefix = 'define(function(require, exports, module) {\n\n';
+  var prefix = 'define(' + (file.skipDepsAnalysis ? '\'' + (file.moduleId || file.id)+ '\', [], ' : '') + 'function(require, exports, module) {\n\n';
   var affix = '\n\n});';
   var tab = fis.util.pad(' ', conf.tab || 2);
 
@@ -159,7 +160,7 @@ function autowrap(info, conf) {
 
   info.content = prefix + content + affix;
   file.wrap = false;
-  fis._amdAnalyzed = null; // 因为改了，所以得让原来的 cache 失效。
+  file._amdAnalyzed = null; // 因为改了，所以得让原来的 cache 失效。
 }
 
 function parse(file, content, conf) {
