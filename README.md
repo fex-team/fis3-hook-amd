@@ -31,7 +31,7 @@ fis.hook('amd', {
 
 请配合 `require.js`、`esl.js` 或者其他满足 amd 规范的前端加载器一起使用。
 
-注意：需要对目标文件设置 `isMod` 属性，说明这些文件是模块化代码。
+注意：虽然是 amd 插件，但是同样支持 commonjs 规范，对目标文件设置 `isMod` 属性，此插件会自动包裹成 `amd` 规范的。
 
 
 ```js
@@ -40,7 +40,13 @@ fis.match('/modules/**.js', {
 })
 ``` 
 
-只有标记是模块化的 js 才会去解析。
+另外需要注意的是 amd 插件需要，需要把目标文件解析成 `ast`，然后再基于 `ast` 来处理，对于大的 js 文件来说，确实很费时间。那么如果想跳过某些文件的分析，请添加 `skipDepsAnalysis:true`, 可以大大减少编译时间。
+
+```js
+fis.match('some big file', {
+  skipDepsAnalysis: true
+})
+```
 
 ## 自定义模块ID
 
