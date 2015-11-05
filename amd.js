@@ -10,6 +10,10 @@ var _ = fis.util;
 var amd = module.exports = function(info, conf) {
   var file = info.file;
 
+  if (!file.isMod && file.skipDepsAnalysis) {
+    return;
+  }
+
   autowrap(info, conf);
   info.content = parse(file, info.content, conf);
   info.content = amd.restoreFISLang(info.content);
