@@ -166,7 +166,7 @@ function autowrap(info, conf) {
 function parse(file, content, conf) {
   var ret = file._amdAnalyzed || analyze(content);
   var forgetDefine = file.isMod === false || file.isPartial;
-  var ignoreDependencies = opts.ignoreDependencies || [];
+  var ignoreDependencies = conf.ignoreDependencies || [];
   var isIgnored = function(str) {
     var found = false;
 
