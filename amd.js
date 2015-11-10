@@ -220,7 +220,7 @@ function parse(file, content, conf) {
         return;
       }
 
-      if (module.id) {
+      if (module.id && !conf.allowOnymous) {
         fis.log.warning('Onymous module `%s` is not allowed here in `%s`, but it will be erased anyway.', module.id, file.subpath);
       }
 
