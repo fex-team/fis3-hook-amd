@@ -67,6 +67,20 @@ var entry = module.exports = function(fis, opts) {
       }
     }
   });
+  fis.on('components:info', function(componentsInfo) {
+    var componentsDir = (fis.env().get('component.dir') || 'components/').replace(/\/$/, '');
+    var path = require('path');
+    Object.keys(componentsInfo).forEach(function(key) {
+      var json = componentsInfo[key];
+      opts.packages = opts.packages || [];
+      opts.packages.unshift({
+        name: json.name,
+        main: json.main || 'index',
+        location: path.join(componentsDir, json.name)
+      });
+    });
+    lookup.init(fis, opts);
+  });
 
   // 支持 data-main 的用法。
   var rScript = /<!--([\s\S]*?)(?:-->|$)|(<script[^>]*>[\s\S]*?<\/script>)/ig;
