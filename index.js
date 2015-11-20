@@ -78,6 +78,27 @@ var entry = module.exports = function(fis, opts) {
         main: json.main || 'index',
         location: path.join(componentsDir, json.name)
       });
+
+      if (json.shim) {
+        opts.shim = opts.shim || {};
+
+        Object.keys(json.shim).forEach(function(key) {
+          var val = json.shim[key];
+
+          if (Array.isArray(val)) {
+            val = {
+              deps: val
+            }
+          }
+
+          var info = lookup(fis.util.query(path.join(componentsDir, key)));
+          if (!info.file) {
+            return;
+          }
+
+          opts.shim[info.file.subpath] = obj;
+        });
+      }
     });
     lookup.init(fis, opts);
   });
