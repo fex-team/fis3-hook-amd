@@ -70,6 +70,7 @@ var entry = module.exports = function(fis, opts) {
   fis.on('components:info', function(componentsInfo) {
     var componentsDir = (fis.env().get('component.dir') || 'components/').replace(/\/$/, '');
     var path = require('path');
+    var shims = {};
     Object.keys(componentsInfo).forEach(function(key) {
       var json = componentsInfo[key];
       opts.packages = opts.packages || [];
@@ -80,27 +81,31 @@ var entry = module.exports = function(fis, opts) {
       });
 
       if (json.shim) {
-        opts.shim = opts.shim || {};
-
-        Object.keys(json.shim).forEach(function(key) {
-          var val = json.shim[key];
-
-          if (Array.isArray(val)) {
-            val = {
-              deps: val
-            }
-          }
-
-          var info = lookup(fis.util.query(path.join(componentsDir, key)));
-          if (!info.file) {
-            return;
-          }
-
-          opts.shim[info.file.subpath] = obj;
-        });
+        shims[key] = json.shim;
       }
     });
     lookup.init(fis, opts);
+    Object.keys(shims).forEach(function(key) {
+      var shim = shims[key];
+
+      Object.keys(shim).forEach(function(key2) {
+        var val = shim[key2];
+
+        if (Array.isArray(val)) {
+          val = {
+            deps: val
+          }
+        }
+
+        var info = lookup(fis.util.query(path.join(componentsDir, key, key2)));
+        if (!info.file) {
+          return;
+        }
+
+        opts.shim = opts.shim || {};
+        opts.shim[info.file.subpath] = val;
+      });
+    });
   });
 
   // 支持 data-main 的用法。
