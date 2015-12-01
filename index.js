@@ -118,7 +118,7 @@ var entry = module.exports = function(fis, opts) {
     info.content = info.content.replace(rScript, function(all, comment, script) {
       if (!comment && script) {
         all = all.replace(rDataMain, function(_, quote, value) {
-          return lang.info.wrap(lang.jsRequire.wrap(quote + value + quote));
+          return 'data-main=' + lang.jsAsync.wrap(quote + value + quote);
         });
       }
 
