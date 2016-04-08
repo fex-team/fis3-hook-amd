@@ -15,7 +15,7 @@ var amd = module.exports = function(info, conf) {
   if (file.skipDepsAnalysis) {
     return;
   }
-  
+
   info.content = parse(file, info.content, conf);
   info.content = amd.restoreFISLang(info.content);
 };
@@ -58,10 +58,16 @@ var amd = module.exports = function(info, conf) {
 
 amd.hasDefine = function(content) {
   var matched = false;
+  var ret;
 
   rDefine.lastIndex = 0; // reset RegExp
-  while(!matched && rDefine.test(content)) {
-    matched = !!RegExp.$2;
+  while(!matched && (ret = rDefine.exec(content))) {
+
+    if (ret[2] && content.substring(ret.index - 8, ret.index) === 'function') {
+      continue;
+    }
+
+    matched = !!ret[2];
   }
 
   return matched;
@@ -410,7 +416,7 @@ function parse(file, content, conf) {
           asyncRequires.push(req);
         });
       }
-      
+
     } else {
       if (node.asyncRequires && node.asyncRequires.length) {
         [].push.apply(asyncRequires, node.asyncRequires);
@@ -546,7 +552,7 @@ function traverse(ast, scopes, gs, enter, leave) {
           current.arguments[current.arguments.length - 1].type === 'FunctionExpression' ||
           current.arguments[current.arguments.length - 1].type === 'FunctionDeclaration' ||
           current.arguments[current.arguments.length - 1].type === 'ArrayExpression' ||
-          current.arguments[current.arguments.length - 1].type === 'Identifier' 
+          current.arguments[current.arguments.length - 1].type === 'Identifier'
         )
       ) {
 
