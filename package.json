@@ -1,6 +1,6 @@
 {
   "name": "fis3-hook-amd",
-  "version": "0.1.15",
+  "version": "0.1.16",
   "description": "fis3 amd",
   "main": "index.js",
   "scripts": {
@@ -25,6 +25,6 @@
     "escope": "^3.2.0",
     "esprima": "^2.5.0",
     "estraverse": "^4.1.0",
-    "fis3-hook-commonjs": "0.1.13"
+    "fis3-hook-commonjs": "0.1.18"
   }
 }
