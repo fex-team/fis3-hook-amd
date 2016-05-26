@@ -1,5 +1,5 @@
-var lookup = require('fis3-hook-commonjs/lookup.js');
-var commonJs = require('fis3-hook-commonjs/parser.js');
+var lookup = fis.require('hook-commonjs/lookup.js');
+var commonJs = fis.require('hook-commonjs/parser.js');
 var amd = require('./amd.js');
 
 // 程序入口
