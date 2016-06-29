@@ -1,6 +1,6 @@
 {
   "name": "fis3-hook-amd",
-  "version": "0.1.18",
+  "version": "0.2.0",
   "description": "fis3 amd",
   "main": "index.js",
   "scripts": {
@@ -21,10 +21,12 @@
     "url": "https://github.com/fex-team/fis3-hook-amd/issues"
   },
   "homepage": "https://github.com/fex-team/fis3-hook-amd",
+  "peerDependencies": {
+    "fis3-hook-commonjs": "^0.1.22"
+  },
   "dependencies": {
     "escope": "^3.2.0",
     "esprima": "^2.5.0",
-    "estraverse": "^4.1.0",
-    "fis3-hook-commonjs": "^0.1.19"
+    "estraverse": "^4.1.0"
   }
 }
