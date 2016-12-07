@@ -277,8 +277,8 @@ function parse(file, content, conf) {
         }
       }
       //  没有指定的话，原来 factory 里面参数放回去。
-      else {
-        args = argsRaw.concat();
+      if (module.deps && module.deps.length || conf.skipFactoryArgsReplace) {
+        args = args.concat(argsRaw);
       }
 
       if (node.requires && node.requires.length) {
