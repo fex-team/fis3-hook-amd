@@ -1,6 +1,6 @@
 {
   "name": "fis3-hook-amd",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "fis3 amd",
   "main": "index.js",
   "scripts": {

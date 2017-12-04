@@ -16,6 +16,8 @@ var amd = module.exports = function(info, conf) {
     return;
   }
 
+  // 备份中间码。
+  info.content = amd.backUpFISLang(info.content);
   info.content = parse(file, info.content, conf);
   info.content = amd.restoreFISLang(info.content);
 };
@@ -90,8 +92,11 @@ amd.backUpFISLang = function(content) {
   var index = 0;
 
   backups = {};
-  content = content.replace(reg, function(all) {
+  content = content.replace(reg, function(all, type, depth, value) {
     var key = '__fis_backup' + index++;
+    if (~['require', 'jsRequire', 'async', 'jsAsync'].indexOf(type)) {
+      return value;
+    }
     backups[key] = all;
     return key;
   });
@@ -492,9 +497,6 @@ function parse(file, content, conf) {
 }
 
 function analyze(content) {
-  // 备份中间码。
-  content = amd.backUpFISLang(content);
-
   var ast = esprima.parse(content, {
     loc: true,
     attachComment: true,
