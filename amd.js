@@ -18,8 +18,12 @@ var amd = module.exports = function(info, conf) {
 
   // 备份中间码。
   info.content = amd.backUpFISLang(info.content);
-  info.content = parse(file, info.content, conf);
-  info.content = amd.restoreFISLang(info.content);
+  try {
+    info.content = parse(file, info.content, conf);
+  } finally {
+    info.content = amd.restoreFISLang(info.content);
+  }
+  
 };
 
 // 判断是否是 amd
@@ -92,6 +96,17 @@ amd.backUpFISLang = function(content) {
   var index = 0;
 
   backups = {};
+
+  // ignore comments
+  content = content.replace(/"(?:[^\\"\r\n\f]|\\[\s\S])*"|'(?:[^\\'\n\r\f]|\\[\s\S])*'|(\/\/[^\r\n\f]+|\/\*[\s\S]*?(?:\*\/|$))/g, function(_, comment) {
+    if (comment) {
+      var key = '/*__fis_backup' + index++ + '*/';
+      backups[key] = comment;
+      return key;
+    }
+    return _;
+  });
+
   content = content.replace(reg, function(all, type, depth, value) {
     var key = '__fis_backup' + index++;
     if (~['require', 'jsRequire', 'async', 'jsAsync'].indexOf(type)) {
