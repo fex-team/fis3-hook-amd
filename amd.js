@@ -98,8 +98,8 @@ amd.backUpFISLang = function(content) {
   backups = {};
 
   // ignore comments
-  content = content.replace(/"(?:[^\\"\r\n\f]|\\[\s\S])*"|'(?:[^\\'\n\r\f]|\\[\s\S])*'|(\/\/[^\r\n\f]+|\/\*[\s\S]*?(?:\*\/|$))/g, function(_, comment) {
-    if (comment) {
+  content = content.replace(/"(?:[^\\"\r\n\f]|\\[\s\S])*"|'(?:[^\\'\n\r\f]|\\[\s\S])*'|(\/\/[^\r\n\f]+|\/\*[\s\S]*?(?:\*\/|$))/g, function(_, comment, offset, whole) {
+    if (comment && whole[offset -1] !== '\\') {
       var key = '/*__fis_backup' + index++ + '*/';
       backups[key] = comment;
       return key;
